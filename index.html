@@ -9,7 +9,7 @@
     <!-- 
       This file uses the modern Tailwind/Chart.js layout 
       and is populated with Mario Hernandez's "SaaS Business Leader" professional data.
-      Added headshot, changed font to Helvetica, added PDF embed tab.
+      Added headshot, changed font to Helvetica, added PDF embed tab using <object>.
       Removed extraneous comments.
     -->
     <style>
@@ -130,22 +130,30 @@
         color: #4b5563;
         line-height: 1.6;
       }
-      /* PDF Embed Style */
+      /* PDF Embed Style for <object> */
       .pdf-embed-container {
-        position: relative;
         width: 100%;
         height: 80vh; /* Adjust height as needed */
-        overflow: hidden;
-      }
-      .pdf-embed-container iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
         border: 1px solid #e5e7eb; /* Add a light border */
         border-radius: 8px;
+        background-color: #f9fafb; /* Light background for the container */
+        display: flex; /* Use flexbox for centering fallback text */
+        justify-content: center;
+        align-items: center;
       }
+      .pdf-embed-container object {
+         display: block; /* Ensure object takes up space */
+         width: 100%;
+         height: 100%;
+         border-radius: 8px; /* Match container border radius */
+      }
+       /* Style for the fallback text inside <object> */
+      .pdf-embed-container p {
+         text-align: center;
+         color: #6b7280;
+         padding: 2rem;
+      }
+
     </style>
 </head>
 <body class="antialiased">
@@ -422,10 +430,12 @@
                  <div id="pdf-resume-tab" class="tab-content hidden">
                      <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-700/50 pb-2">PDF Resume</h2>
                      <div class="pdf-embed-container bg-gray-100 rounded-lg">
-                         <iframe 
-                            src="Mario Hernandez Resume 2025.pdf" 
-                            title="Mario Hernandez Resume PDF"
-                         ></iframe>
+                         <!-- Switched to <object> tag for better compatibility -->
+                         <object data="Mario Hernandez Resume 2025.pdf" type="application/pdf" width="100%" height="100%">
+                             <p>Your browser does not support embedded PDFs. You can 
+                                <a href="Mario Hernandez Resume 2025.pdf" target="_blank" class="text-blue-700 hover:underline">view or download the PDF</a> instead.
+                             </p>
+                         </object>
                      </div>
                      <p class="mt-4 text-center text-gray-600">
                          If the PDF does not display above, you can 
