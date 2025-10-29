@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume - Mario Hernandez</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 
+      This file uses the modern Tailwind/Chart.js layout 
+      and is populated with Mario Hernandez's "SaaS Business Leader" professional data.
+      "Ask Gemini About Me" section removed.
+    -->
+    <style>
+        @font-face {
+            font-family: 'Salesforce Sans';
+            src: url('https://unpkg.com/@salesforce-ux/design-system/assets/fonts/SalesforceSans-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Salesforce Sans';
+            src: url('https://unpkg.com/@salesforce-ux/design-system/assets/fonts/SalesforceSans-Bold.woff2') format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+        body {
+            font-family: 'Salesforce Sans', sans-serif;
+            background-color: #fdfdfc;
+            color: #333;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px; /* Adjusted height for new data */
+            max-height: 50vh;
+        }
+        .filter-btn {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .filter-btn.active {
+            background-color: #1d4ed8;
+            color: #fff;
+            border-color: #1d4ed8;
+        }
+        .job-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .tab-btn {
+            padding: 1rem 0.25rem;
+            margin-bottom: -1px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .tab-btn.active {
+            border-color: #1d4ed8;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+        /* Project Tags Styling */
+        .project-tag-container {
+             margin-top: 1rem; /* Add space above the tags */
+        }
+        .project-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            border: 1px solid transparent; /* Base border */
+       }
+         /* Specific Company Tag Styles */
+         .tag-smartsheet { background-color: #d1e9fa; color: #005a9e; border-color: #a6d7f7; }
+         .tag-brandfolder { background-color: #ffe8de; color: #c44719; border-color: #fccbb8; }
+         .tag-2u { background-color: #cffafe; color: #0891b2; border-color: #a5f3fc; }
+
+     /* Subheadings for job descriptions */
+     .job-sub-title {
+        font-weight: 700;
+        color: #374151; /* A slightly darker gray for emphasis */
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+     }
+     .job-intro-desc {
+        font-style: italic;
+        color: #4b5563;
+        border-left: 3px solid #60a5fa; /* A light blue accent */
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+     }
+     /* Education Tab Styling */
+     .education-item {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem; /* 12px */
+        padding: 1.5rem; /* 24px */
+        margin-bottom: 1.5rem; /* 24px */
+     }
+     .education-item h3 {
+        margin-top: 0;
+        margin-bottom: 0.25rem; /* 4px */
+     }
+     .education-item .degree {
+        font-size: 1.125rem; /* 18px */
+        color: #4b5563; /* gray-600 */
+        margin-bottom: 0.25rem;
+     }
+      .education-item .dates {
+        font-size: 0.875rem; /* 14px */
+        color: #6b7280; /* gray-500 */
+        margin-bottom: 1rem; /* 16px */
+     }
+     .education-item .details-heading {
+        font-weight: 600;
+        color: #374151; /* gray-700 */
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem; /* 14px */
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+     }
+      .education-item .details-list {
+        font-size: 0.95rem; /* Slightly larger than tags */
+        color: #4b5563;
+        line-height: 1.6;
+      }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header with Mario's SaaS Leader Info -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-center items-center">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold text-gray-800">Mario Hernandez</h1>
+                <p class="text-lg text-gray-600 mt-1">SaaS Business Operations & Customer Success Leader</p>
+                <div class="mt-2 text-sm text-gray-500 flex flex-wrap justify-center items-center gap-x-4">
+                    <span>San Francisco, CA</span>
+                    <span class="text-gray-300">&bull;</span>
+                    <a href="mailto:mario.j.hernandez@outlook.com" class="text-blue-700 hover:underline">mario.j.hernandez@outlook.com</a>
+                    <span class="text-gray-300">&bull;</span>
+                    <a href="https://www.linkedin.com/in/mariojhernandez" target="_blank" class="text-blue-700 hover:underline">linkedin.com/in/mariojhernandez</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <!-- Professional Summary for SaaS Leader -->
+        <section id="summary" class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-700/50 pb-2">Professional Summary</h2>
+            <p class="text-lg text-gray-700 leading-relaxed">
+                Strategic SaaS Business Leader with expertise in Customer Success Operations, direct Customer Engagement, and M&A integration.
+                Focused on driving retention, growth, and value across the customer lifecycle by building scalable processes, optimizing onboarding and success programs, and aligning cross-functional teams across global business segments (Supporting 175 CSMs).
+                Experienced in leveraging data to create scalable solutions, delivering executive-level communication, and thriving in fast-paced, ambiguous start-up environments.
+            </p>
+        </section>
+
+        <div>
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex flex-wrap justify-center gap-x-4 sm:gap-x-8 gap-y-2" aria-label="Tabs">
+                    <button class="tab-btn active" data-target="#experience-tab">Professional Experience</button>
+                    <button class="tab-btn" data-target="#projects-tab">Key Projects</button>
+                    <button class="tab-btn" data-target="#competencies-tab">Core Competencies</button>
+                    <button class="tab-btn" data-target="#certs-tab">Certifications</button>
+                    <button class="tab-btn" data-target="#education-tab">Education</button>
+                    <!-- Removed Ask Gemini Button -->
+                </nav>
+            </div>
+
+            <div class="mt-8">
+                <div id="experience-tab" class="tab-content">
+                    <section id="timeline" class="mb-16">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2 border-b-2 border-blue-700/50 pb-2">Career Progression</h2>
+                        <p class="text-lg text-gray-700 mb-6 leading-relaxed">This chart provides a visual overview of my career journey, highlighting the duration of each role. It demonstrates a consistent path of growth and increasing responsibility. Bars are color-coded by employer for clarity, and you can hover over any bar to see the specific role and its tenure.</p>
+                        <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-4 text-sm text-gray-600">
+                            <span class="font-semibold">Legend:</span>
+                            <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2" style="background-color: #0082c9;"></span>Smartsheet</div>
+                            <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2" style="background-color: #e56638;"></span>Brandfolder</div>
+                            <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2" style="background-color: #00b0b9;"></span>2U Inc.</div>
+                            <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2" style="background-color: #c00000;"></span>FirstBank</div>
+                            <div class="flex items-center"><span class="w-3 h-3 rounded-full mr-2" style="background-color: #cfb87c;"></span>CU Boulder</div>
+                        </div>
+                        <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg border border-gray-100">
+                            <div class="chart-container">
+                                <canvas id="careerTimelineChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="experience" class="mb-16">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2 border-b-2 border-blue-700/50 pb-2">Detailed Roles</h2>
+                        <p class="text-lg text-gray-700 mb-6 leading-relaxed">My professional history includes roles in operations, management, and customer success. You can use the filters below to highlight roles from a specific company.</p>
+                        <div id="filter-container" class="flex flex-wrap justify-center gap-2 mb-8"></div>
+                        <div id="experience-container" class="space-y-8"></div>
+                    </section>
+                </div>
+
+                <div id="projects-tab" class="tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 space-y-8">
+                        
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Gainsight Implementation & Adoption</h3>
+                            <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Created Renewal Success Plans, documentation, and templates.</li>
+                                <li>Transitioned Customer Health Scores from Smartsheet to Gainsight dashboards.</li>
+                                <li>Managed Annual Account Transitions, territory planning, and account distribution.</li>
+                                <li>Developed a Gainsight Inventory (Templates, Journeys, Playbooks, etc.) for CSMs.</li>
+                                <li>Attended Gainsight's Pulse 2024 Conference and delivered team enablement on new resources.</li>
+                            </ul>
+                            <div class="project-tag-container">
+                                <span class="project-tag tag-smartsheet">SMAR</span>
+                                <span class="project-tag tag-brandfolder">BF</span>
+                            </div>
+                        </div>
+                        <hr class="border-gray-200">
+
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Building Account Sheets for CSMs</h3>
+                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Learned and applied Smartsheet Automations and Workflows from scratch.</li>
+                                <li>Collaborated with IT/BI to merge and ensure accurate data from Snowflake, Salesforce, and Tableau.</li>
+                                <li>Owned data management, annual process iteration, documentation, and troubleshooting.</li>
+                             </ul>
+                             <div class="project-tag-container">
+                                 <span class="project-tag tag-smartsheet">SMAR</span>
+                                 <span class="project-tag tag-brandfolder">BF</span>
+                             </div>
+                        </div>
+                        <hr class="border-gray-200">
+
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Creating MBO Program for CSMs</h3>
+                            <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Tied Management by Objectives (MBOs) to variable compensation, documented in Workday.</li>
+                                <li>Led cross-functional collaboration with HR, BI, and Senior CS Leadership.</li>
+                                <li>Ensured data validation and reliability from Salesforce, Tableau, and Workday.</li>
+                                <li>Audited data quarterly for accuracy, resulting in only one pay discrepancy in two years (due to user error).</li>
+                             </ul>
+                              <div class="project-tag-container">
+                                 <span class="project-tag tag-smartsheet">SMAR</span>
+                                 <span class="project-tag tag-brandfolder">BF</span>
+                             </div>
+                        </div>
+                        <hr class="border-gray-200">
+
+                         <div>
+                            <h3 class="text-xl font-bold text-gray-800">Managing User Subscription Model Transition</h3>
+                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Focused on CS Operations for a complex, company-wide product rollout.</li>
+                                <li>Addressed customer confusion regarding billing and license true-ups.</li>
+                                <li>Contributed to the relaunch campaign, focusing on enablement, communication plans, and data integrity audits for CSMs.</li>
+                             </ul>
+                              <div class="project-tag-container">
+                                 <span class="project-tag tag-smartsheet">SMAR</span>
+                             </div>
+                        </div>
+                        <hr class="border-gray-200">
+                        
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Leading Quarterly Reviews (QBRs)</h3>
+                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Gathered and synthesized data from BI, Analysts, and Finance.</li>
+                                <li>Demonstrated leadership and executive presence during QBR presentations.</li>
+                                <li>Ensured collaboration and data integrity for Senior Leadership review.</li>
+                             </ul>
+                              <div class="project-tag-container">
+                                 <span class="project-tag tag-smartsheet">SMAR</span>
+                                 <span class="project-tag tag-brandfolder">BF</span>
+                                 <span class="project-tag tag-2u">2U</span>
+                             </div>
+                        </div>
+                        <hr class="border-gray-200">
+
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Forecast Reporting & Automation</h3>
+                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Built a series of reports, automations, and workflows in Smartsheet to aid Sr. Leaders in monthly/quarterly forecasting.</li>
+                                <li>Created a "source of truth" documentation hub and dashboards for weekly forecast meetings.</li>
+                                <li>Required regular data validation across multiple departments (Sales, BI, RevOps) and knowledge of Salesforce Connectors.</li>
+                             </ul>
+                             <div class="project-tag-container">
+                                 <span class="project-tag tag-smartsheet">SMAR</span>
+                                 <span class="project-tag tag-brandfolder">BF</span>
+                             </div>
+                        </div>
+                        <hr class="border-gray-200">
+                       
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Documentation & Enablement</h3>
+                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                 <li>Managed change during the transition from Seismic to Highspot, auditing all assets.</li>
+                                 <li>Created dozens of SOPs, Playbooks, and Guides for Directors, Managers, and CSMs.</li>
+                                 <li>Developed regular communication plans (Email, Slack, Newsletters) for the CS organization.</li>
+                             </ul>
+                             <div class="project-tag-container">
+                                 <span class="project-tag tag-smartsheet">SMAR</span>
+                                 <span class="project-tag tag-brandfolder">BF</span>
+                                 <span class="project-tag tag-2u">2U</span>
+                             </div>
+                        </div>
+                        <hr class="border-gray-200">
+
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">New Program Launch (UNC Chapel Hill)</h3>
+                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Instrumental in launching a new graduate program (Master of Public Health) for an Enterprise-level customer.</li>
+                                <li>Partnered with university stakeholders to establish scalable processes, ensuring program success and strong retention.</li>
+                             </ul>
+                             <div class="project-tag-container">
+                                 <span class="project-tag tag-2u">2U</span>
+                             </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+                <div id="competencies-tab" class="tab-content hidden">
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Technical Skills</h3>
+                            <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>SQL (Intermediate)</li>
+                                <li>Salesforce</li>
+                                <li>Gainsight</li>
+                                <li>Tableau</li>
+                                <li>Smartsheet</li>
+                                <li>Workday</li>
+                                <li>Seismic & Highspot</li>
+                                <li>Google & Microsoft Suites</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Strategic & Operational</h3>
+                            <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Customer Success Operations</li>
+                                <li>Strategic Planning</li>
+                                <li>Business Process Design</li>
+                                <li>M&A Integration</li>
+                                <li>Cross-Functional Leadership</li>
+                                <li>Scalable Program Management</li>
+                                <li>Data Analysis & Forecasting</li>
+                                <li>Executive Communication</li>
+                            </ul>
+                        </div>
+                        <div class="md:col-span-2">
+                            <h3 class="text-xl font-bold text-gray-800">Languages</h3>
+                            <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
+                                <li>Native Spanish Speaker</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="certs-tab" class="tab-content hidden">
+                     <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-4">Professional Certifications</h3>
+                        <ul class="space-y-4 text-gray-600">
+                            <li class="flex flex-col sm:flex-row justify-between sm:items-baseline">
+                                <span class="font-semibold text-gray-700">2025 Core Product Certified</span>
+                                <span class="text-sm text-gray-500">Smartsheet (Issued: Aug 2023, Updated: Aug 2025)</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row justify-between sm:items-baseline">
+                                <span class="font-semibold text-gray-700">Intermediate SQL</span>
+                                <span class="text-sm text-gray-500">DataCamp (Issued: Oct 2025)</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row justify-between sm:items-baseline">
+                                <span class="font-semibold text-gray-700">Leading Diversity, Equity, and Inclusion</span>
+                                <span class="text-sm text-gray-500">Northwestern University (Issued: May 2021)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="education-tab" class="tab-content hidden">
+                     <div class="education-item bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">University of Denver - Daniels College of Business</h3>
+                        <p class="degree text-lg text-gray-600">Master of Business Administration - MBA, Business Administration and Management, General</p>
+                        <p class="dates text-md text-gray-500 mb-4">2018 - 2019</p>
+                        <p class="details-heading">Skills:</p>
+                        <p class="details-list text-gray-600">Team Management · Team Building · Project Management · Google Applications · Diversity, Equity, Inclusion, and Belonging (DEIB) · Team Leadership · Business Operations Management · Customer Service</p>
+                    </div>
+                     <div class="education-item bg-white p-6 rounded-xl shadow-lg border border-gray-100 mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">University of Northern Colorado</h3>
+                        <p class="degree text-lg text-gray-600">Bachelor of Science (B.S.), Business Administration with an Emphasis in Management</p>
+                        <p class="dates text-md text-gray-500 mb-4">2009 - 2013</p>
+                        <p class="details-heading">Activities and societies:</p>
+                        <p class="details-list text-gray-600 mb-4">Pi Kappa Phi Fraternity, President's Leadership Program, Residence Hall Association, Housing and Residential Education, Cesar Chavez Cultural Center</p>
+                        <p class="details-heading">Skills:</p>
+                        <p class="details-list text-gray-600">Student Affairs · Higher Education · Team Building · Residence Life · Google Applications · Higher Education Administration · Diversity, Equity, Inclusion, and Belonging (DEIB) · Team Leadership</p>
+                    </div>
+                     <div class="education-item bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Thornton High School</h3>
+                        <p class="degree text-lg text-gray-600">High School Diploma, General Education</p>
+                        <p class="degree text-lg text-gray-600">International Baccalaureate Diploma</p>
+                        <p class="dates text-md text-gray-500 mb-4">2005 - 2009</p>
+                        <p class="details-heading">Activities and societies:</p>
+                        <p class="details-list text-gray-600">IB Student Council, National Honor Society, Key Club International, French Club</p>
+                    </div>
+                </div>
+
+                <!-- Removed Ask Gemini Tab Content -->
+                <div id="ai-tab" class="tab-content hidden">
+                    <!-- Content Removed -->
+                </div>
+
+            </div>
+        </div>
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600">
+            <p class="text-lg font-semibold">Mario Hernandez</p>
+            <p>mario.j.hernandez@outlook.com | <a href="https://www.linkedin.com/in/mariojhernandez" target="_blank" class="text-blue-700 hover:underline">LinkedIn Profile</a></p>
+            <p class="mt-4 text-sm">Interactive resume generated on <span id="currentDate"></span>.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const experienceData = [
+                {
+                    company: "Smartsheet",
+                    location: "Remote (San Francisco, CA)",
+                    roles: [
+                        { 
+                            title: "Business Operations Manager, Customer Success", 
+                            duration: "October 2023 – September 2025", 
+                            intro: "Responsible for driving operational excellence and strategic alignment across a global team of over 175 professionals. I partner with senior leadership to design and execute scalable processes that enable the team to achieve key business outcomes and deliver exceptional customer experiences across all segments. (Commercial, Enterprise, NB, Digital & Scale, Renewals)",
+                            details: [
+                                { heading: "STRATEGY & EXECUTION", points: ["Design and implement scalable business processes to enhance the efficiency and impact of the Customer Success team.", "Manage all aspects of operational excellence by developing agendas and content for leadership meetings, All-Team Calls, and operations reviews, and providing weekly performance updates and project reports to VPs and directors."] },
+                                { heading: "PROGRAM & CHANGE MANAGEMENT", points: ["Own and maintain the documentation and roadmaps for key operational programs, including Ops tickets, account routing, and resource portals.", "Oversee critical activities like BOQ/EOQ processes, Salesforce Connector maintenance, and role updates to ensure seamless business operations."] },
+                                { heading: "CROSS-FUNCTIONAL LEADERSHIP", points: ["Serve as the primary liaison between Customer Success and key support teams (BI, RevOps, Marketing, Sales, Product, and HR) to effectively prioritize and execute strategic business needs.", "Cultivate strong relationships with stakeholders, ensuring business operations are consistently aligned with overarching Customer Success goals."] },
+                                { heading: "TOOL & SYSTEMS OPTIMIZATION", points: ["Leverage and optimize a range of tools including Seismic, Gainsight, Salesforce, Tableau, Smartsheet, Workday, Highspot, Lucidchart, and Google Workspace to enhance operational workflows, efficiency, and reporting."] },
+                                { heading: "METRICS & FORECASTING", points: ["Partner with leadership to develop strategic roadmaps, using Portfolio Project Management tools to track progress and maintain accountability.", "Own and manage all core forecasting and business metrics, including risk dashboards and performance reports, to provide actionable insights for senior leadership."] }
+                            ] 
+                        }
+                    ]
+                },
+                {
+                    company: "Brandfolder",
+                    location: "Hybrid (Denver, CO)",
+                    roles: [
+                        { 
+                            title: "Customer Success Operations Manager", 
+                            duration: "March 2022 – October 2023", 
+                            intro: "In a high-growth startup environment, I was a critical part of the merger and acquisition of two Customer Success departments, playing a pivotal role in integrating teams and processes into the larger Smartsheet organization. I was responsible for building the operational foundation for a 12-person CSM team, focusing on data-driven strategy and scalable programs to drive customer value and ensure team success.",
+                            details: [
+                                { heading: "OPERATIONAL STRATEGY & EXECUTION", points: ["Aggregated data from various sources to create meaningful insights and design scalable efficiencies for the Customer Success team.", "Designed and documented Playbooks and Standard Operating Procedures (SOPs) for CSMs covering renewals, upsells, churn forecasting, and mitigation.", "Managed and facilitated meetings to develop strategic plans and achieve intended outcomes."] },
+                                { heading: "PROGRAM & CHANGE MANAGEMENT", points: ["Collaborated with the Customer Success Senior Leadership Team to drive the development of quarterly roadmaps and prioritization planning.", "Owned, iterated, and scaled programs and processes to meet our commitment to driving undeniable value for customers."] },
+                                { heading: "METRICS & REPORTING", points: ["Ensured KPI tracking and consistency of process adoption for clear and accurate reporting of the Customer Success team's performance.", "Audited Salesforce accounts across two instances to develop enhanced reporting, enabling leadership to accurately forecast CSM headcount and book size."] }
+                            ] 
+                        }
+                    ]
+                },
+                {
+                    company: "2U Inc.",
+                    location: "Hybrid (Denver, CO)", 
+                    roles: [
+                         { 
+                            title: "Senior Manager, Customer Success", 
+                            duration: "October 2020 – March 2022", 
+                            intro: "As a Senior Manager at 2U Inc., I managed a team of six CSMs, focusing on driving team efficiency, strategic program management, and cross-functional collaboration. I leveraged data and project management methodologies to enhance customer retention and satisfaction throughout the entire customer lifecycle.",
+                            details: [
+                                { heading: "OPERATIONAL MANAGEMENT", points: ["Managed the daily operations of the Customer Success team, including KPI tracking, process guide creation, implementing large-scale software changes, and project management.", "Gathered and interpreted data to guide the team on new initiatives that positively impacted overall customer retention and satisfaction."] },
+                                { heading: "PROGRAM & CHANGE MANAGEMENT", points: ["Served on various working groups and committees to develop department-wide user guides, business continuity plans, and playbooks for success professionals.", "Drove the overall management of Customer Success processes from onboarding through renewal, in partnership with internal and university stakeholders."] },
+                                { heading: "CROSS-FUNCTIONAL LEADERSHIP", points: ["Served on the Diversity, Equity, and Inclusion Steering Committee, acting as a liaison to internal business resource networks, committees and Executive Leaders.", "Managed program performance, including budget oversight and performance against revenue goals."] }
+                            ] 
+                         },
+                         {
+                            title: "Manager, Customer Success",
+                            duration: "January 2019 – October 2020",
+                            intro: "As a Manager at 2U Inc., I was instrumental in launching a new graduate program for the University of North Carolina at Chapel Hill, a key Enterprise-level customer. I partnered closely with university stakeholders to establish scalable and efficient processes, ensuring program success and strong customer retention. I also led the daily operations of the team, managing caseloads, forecasting hiring needs, and driving data-informed initiatives.",
+                            details: [
+                                { heading: "OPERATIONAL MANAGEMENT", points: ["Managed the daily operations of the Customer Success team, including KPI tracking, creating process guides, implementing large-scale software changes, project managing, and creating efficiencies for the team.", "Managed and distributed student case loads to Success Managers, forecasted hiring needs, and ensured the successful hiring, onboarding, and training of new team members."] },
+                                { heading: "STRATEGIC PLANNING & GROWTH", points: ["Assisted with the launch operations of a new graduate program and worked closely with university stakeholders on establishing scalable and efficient processes for program growth.", "Gathered and interpreted data to guide the team through new initiatives to positively impact overall retention and student satisfaction of multiple degree programs."] }
+                            ]
+                         },
+                         {
+                            title: "Senior Customer Success Manager",
+                            duration: "June 2018 – January 2019",
+                            intro: "As a Senior Customer Success Manager, I assisted in managing the daily activities of the team, ensuring operational excellence and consistent customer engagement. I served as a primary point of contact for colleagues and partners, leveraging my expertise to manage critical issues and drive key processes.",
+                            details: [ { heading: "KEY RESPONSIBILITIES", points: ["Managed the activities of the team by overseeing processes for new customer onboarding, training, and retention, as well as ongoing follow-up and communication.", "Served as the primary point of contact for team members' questions and scheduling, and assessed critical situations to determine when escalation was required.", "Worked closely with university partners, acting as the main point of contact for key programs and for a book of business of approximately 200 students."] } ]
+                         },
+                         {
+                            title: "Customer Success Manager",
+                            duration: "July 2016 – June 2018",
+                            intro: "As a Customer Success Manager, I provided exceptional service to customers, (Students, Faculty, and Administrators) ensuring the successful onboarding and ongoing engagement of each program. I maintained consistent communication and proactively addressed issues to drive customer satisfaction and retention.",
+                            details: [ { heading: "KEY RESPONSIBILITIES", points: ["Provided exceptional service to students and faculty with academic, procedural, or technical issues.", "Assisted in customer on-boarding and implementation, including online orientation, registration, and live training of the online platform.", "Maintained regular communication with assigned customers and addressed all incoming communications in an expedient and professional manner.", "Oversaw projects including the organization of a Customer Ambassador Program and on-site customer networking events."] } ]
+                         }
+                    ]
+                },
+                {
+                    company: "FirstBank",
+                    location: "Breckenridge, CO",
+                    roles: [
+                         { 
+                            title: "Banking Officer", 
+                            duration: "August 2015 – June 2016", 
+                            intro: "In this role, I completed an intensive Management Training Program and was promoted to Banking Officer. I was responsible for the operational oversight of a local branch in Breckenridge, Colorado, and provided strategic support for the broader Mountain Market, including two additional branches in Frisco and Dillon.",
+                            details: [ { heading: "KEY RESPONSIBILITIES", points: ["Oversaw the daily operations of the teller line, new accounts department, and bookkeeping department.", "Processed consumer lending applications, loan underwriting, loan processing, and financial analysis.", "Assisted in personnel management, performance appraisals, and the hiring and training of new staff members.", "Oversaw the implementation of market-wide projects across multiple branches in Summit County."] } ] 
+                        }
+                    ]
+                },
+                {
+                    company: "University of Colorado Boulder",
+                    location: "Boulder, CO",
+                    roles: [
+                         { 
+                            title: "Assistant Residence Hall Director", 
+                            duration: "July 2013 – June 2015",
+                            intro: "In this role, I collaborated with a Hall Director to oversee the daily operations of two residence halls, serving a combined population of 550 students. I was responsible for a wide range of operational, managerial, and student development functions, ensuring a safe and supportive community environment.", 
+                            details: [
+                                { heading: "OPERATIONAL MANAGEMENT", points: ["Coordinated and assessed the operations, scheduling, and customer service initiatives of two 24-hour front desks.", "Managed occupancy and room-change processes, ensuring a streamlined and organized experience for residents."] },
+                                { heading: "TEAM LEADERSHIP & DEVELOPMENT", points: ["Co-selected, trained, supervised, and conducted performance reviews for a team of 30-50 paraprofessional staff members.", "Promoted student development through themed programming, community-building initiatives, and leadership development opportunities for residents and staff."] },
+                                { heading: "STUDENT SUCCESS & CRISIS RESPONSE", points: ["Held student conduct meetings, managed violations of the Student Code of Conduct, and practiced crisis management and emergency response procedures during duty rotations.", "Maintained regular communication through duty reports, incident reports, emails, and database management."] },
+                                { heading: "CROSS-FUNCTIONAL PARTNERSHIPS", points: ["Created meaningful relationships and partnerships with key campus partners, including Counseling and Psychological Services, CU Police, and the Women's Resource Center.", "Assisted Conference Services with summer orientation operations, including supervising a Student Manager."] },
+                                { heading: "DIVERSITY & INCLUSION", points: ["Integrated social justice, diversity, and cultural differences into policies and processes.", "Participated in the Social Justice Lead Advisory Board and facilitated monthly programming for 25 paraprofessional staff members."] }
+                            ] 
+                         }
+                    ]
+                }
+            ];
+            
+            const experienceContainer = document.getElementById('experience-container');
+            const filterContainer = document.getElementById('filter-container');
+
+            const parseDate = (dateStr) => {
+                if (!dateStr) return new Date(NaN); 
+                const lowerDateStr = dateStr.toLowerCase().trim();
+                if (lowerDateStr === 'present') return new Date();
+                const parts = dateStr.trim().split(' ');
+                if (parts.length === 2) {
+                    const [month, year] = parts;
+                    const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].findIndex(m => m.toLowerCase() === month.toLowerCase());
+                    if (monthIndex > -1 && /^\d{4}$/.test(year)) return new Date(parseInt(year), monthIndex, 1);
+                }
+                if (parts.length === 1 && /^\d{4}$/.test(parts[0])) return new Date(parts[0], 0, 1);
+                const dateParts = dateStr.trim().split(' – '); 
+                if (dateParts.length > 0) {
+                     const startParts = dateParts[0].trim().split(' ');
+                     if (startParts.length === 2) {
+                         const [month, year] = startParts;
+                         const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].findIndex(m => m.toLowerCase() === month.toLowerCase());
+                         if (monthIndex > -1 && /^\d{4}$/.test(year)) return new Date(parseInt(year), monthIndex, 1);
+                     }
+                 }
+                console.warn("Could not parse date:", dateStr); 
+                return new Date(NaN); 
+            };
+            
+            const getFirstStartDate = (data) => {
+                 if (!data || data.length === 0) return new Date(); 
+                const allStartDates = data.flatMap(company => company.roles.map(role => parseDate(role.duration.split(' – ')[0])));
+                 const validDates = allStartDates.filter(date => !isNaN(date.getTime()));
+                 if (validDates.length === 0) return new Date(); 
+                return new Date(Math.min.apply(null, validDates));
+            };
+            const minDate = getFirstStartDate(experienceData);
+
+            const getTenureForRoles = (roles) => {
+                 if (!roles || roles.length === 0) return '';
+                let maxEndDate = new Date(0); 
+                let minStartDate = new Date(8640000000000000); 
+                let latestRoleEndDateString = ''; 
+                roles.forEach(role => {
+                    const [startStr, endStr] = role.duration.split(' – ');
+                    const startDate = parseDate(startStr);
+                    const endDate = parseDate(!endStr || endStr.toLowerCase() === 'present' ? 'Present' : endStr); 
+                    if (!isNaN(startDate.getTime())) { if (startDate < minStartDate) minStartDate = startDate; }
+                    if (!isNaN(endDate.getTime())) { if (endDate >= maxEndDate) { maxEndDate = endDate; latestRoleEndDateString = endStr || 'Present'; } }
+                });
+                 if (isNaN(minStartDate.getTime()) || isNaN(maxEndDate.getTime())) { console.warn("Could not calculate tenure due to invalid dates for roles:", roles); return ''; }
+                const options = { month: 'short', year: 'numeric' };
+                const startFormatted = minStartDate.toLocaleDateString('en-US', options);
+                let endFormatted;
+                if (latestRoleEndDateString && latestRoleEndDateString.toLowerCase() === 'present') { endFormatted = 'Present'; } 
+                else { endFormatted = maxEndDate.toLocaleDateString('en-US', options); }
+                return `${startFormatted} - ${endFormatted}`;
+            }
+            
+            const createCompanyCard = (company, rolesToShow) => {
+                const companyCard = document.createElement('div');
+                companyCard.className = 'job-card bg-white p-6 rounded-xl shadow-lg border border-gray-100';
+                let rolesHtml = rolesToShow.map(role => {
+                    const introHtml = role.intro ? `<p class="job-intro-desc">${role.intro}</p>` : '';
+                    const detailsHtml = Array.isArray(role.details) ? role.details.map(section => {
+                        const pointsHtml = Array.isArray(section.points) ? section.points.map(point => `<li>${point}</li>`).join('') : '';
+                        return section.heading ? `<div class="job-sub-title">${section.heading}</div><ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">${pointsHtml}</ul>` : '';
+                    }).join('') : '';
+                    let displayDuration = role.duration; 
+                    return `<div class="mb-4 last:mb-0"><div class="flex flex-wrap justify-between items-baseline"><h4 class="text-xl font-bold text-gray-800">${role.title}</h4><p class="text-sm text-gray-500 font-medium">${displayDuration}</p></div>${introHtml}${detailsHtml}</div>`;
+                }).join('<hr class="my-4 border-gray-200">');
+                companyCard.innerHTML = `<div class="flex justify-between items-center mb-4"><h3 class="text-2xl font-semibold text-gray-700">${company.company}</h3><p class="text-md text-gray-500">${company.location}</p></div>${rolesHtml}`;
+                if (experienceContainer) experienceContainer.appendChild(companyCard); // Check container exists
+            };
+
+            const renderExperience = (filter = 'all') => {
+                if (!experienceContainer) return; 
+                experienceContainer.innerHTML = '';
+                if (filter === 'all') { experienceData.forEach(company => createCompanyCard(company, company.roles)); return; }
+                const [type, ...valueParts] = filter.split('_');
+                const value = valueParts.join('_'); 
+                if (type === 'COMPANY') {
+                    const company = experienceData.find(c => c.company.replace(/[^a-zA-Z0-9]/g, '_') === value);
+                    if (company) createCompanyCard(company, company.roles); 
+                    else console.warn("No company found for filter value:", value);
+                }
+            };
+            
+            const setupFilters = () => {
+                if (!filterContainer) return; 
+                filterContainer.innerHTML = '';
+                const allBtn = document.createElement('button');
+                allBtn.className = 'filter-btn active py-2 px-4 bg-gray-200 text-gray-700 rounded-full font-semibold';
+                allBtn.textContent = 'All Companies';
+                allBtn.dataset.filter = 'all';
+                filterContainer.appendChild(allBtn);
+                experienceData.forEach(company => {
+                    const tenure = getTenureForRoles(company.roles);
+                     if (tenure) { 
+                        const companyBtn = document.createElement('button');
+                        companyBtn.className = 'filter-btn py-2 px-4 bg-gray-200 text-gray-700 rounded-full font-semibold';
+                        const filterName = company.company.replace(/[^a-zA-Z0-9]/g, '_'); 
+                        companyBtn.dataset.filter = `COMPANY_${filterName}`;
+                        companyBtn.textContent = `${company.company} `; 
+                        const tenureSpan = document.createElement('span');
+                        tenureSpan.className = "text-xs font-normal opacity-75 ml-1";
+                        tenureSpan.textContent = `(${tenure})`;
+                        companyBtn.appendChild(tenureSpan);
+                        filterContainer.appendChild(companyBtn);
+                     } else console.warn("Could not calculate tenure for company:", company.company);
+                });
+                filterContainer.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.filter-btn'); 
+                    if (!btn) return; 
+                    const filterValue = btn.dataset.filter;
+                    filterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderExperience(filterValue);
+                });
+            };
+
+            setupFilters();
+            renderExperience();
+            
+            let careerChart = null;
+            const createChart = () => {
+                 const chartElement = document.getElementById('careerTimelineChart');
+                 if (!chartElement) { console.error("Canvas element #careerTimelineChart not found."); return; }
+                 if (!experienceData || experienceData.length === 0) { console.error("No experience data to create chart."); return; }
+                const timelineData = experienceData.flatMap(c => c.roles.map(role => ({...role, company: c.company}))).reverse();
+                const chartLabels = timelineData.map(r => `${r.title} (${r.company})`);
+                const chartData = timelineData.map(r => {
+                    const [startStr, endStr] = r.duration.split(' – ');
+                     const start = parseDate(startStr);
+                     const end = parseDate(!endStr || endStr.toLowerCase() === 'present' ? 'Present' : endStr);
+                     if (isNaN(start.getTime()) || isNaN(end.getTime())) { console.error("Invalid date found for role:", r.title, startStr, endStr); return [null, null]; }
+                    return [start.getTime(), end.getTime()];
+                }).filter(range => range && range[0] !== null && range[1] !== null); 
+                 if (chartData.length === 0) { console.error("No valid date ranges found for chart."); return; }
+                 const chartMinDate = !isNaN(minDate.getTime()) ? minDate.getTime() : Math.min(...chartData.map(d => d[0])); 
+                const ctx = chartElement.getContext('2d');
+                 if (careerChart) careerChart.destroy();
+                careerChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels: chartLabels, datasets: [{
+                            label: 'Role Duration', data: chartData, 
+                            backgroundColor: (context) => { /* ... colors based on company ... */ 
+                                const index = context.dataIndex;
+                                if (index >= timelineData.length || !timelineData[index]) return 'rgba(150, 150, 150, 0.6)'; 
+                                const item = timelineData[index];
+                                if (item.company === 'Smartsheet') return 'rgba(0, 130, 201, 0.7)'; 
+                                if (item.company.includes('Brandfolder')) return 'rgba(229, 102, 56, 0.7)'; 
+                                if (item.company === '2U Inc.') return 'rgba(0, 176, 185, 0.7)'; 
+                                if (item.company === 'FirstBank') return 'rgba(192, 0, 0, 0.7)'; 
+                                if (item.company.includes('Boulder')) return 'rgba(207, 184, 124, 0.7)'; 
+                                return 'rgba(150, 150, 150, 0.6)';
+                            }, 
+                            borderColor: (context) => { /* ... border colors based on company ... */ 
+                                const index = context.dataIndex;
+                                if (index >= timelineData.length || !timelineData[index]) return 'rgba(150, 150, 150, 1)'; 
+                                const item = timelineData[index];
+                                if (item.company === 'Smartsheet') return 'rgba(0, 130, 201, 1)';
+                                if (item.company.includes('Brandfolder')) return 'rgba(229, 102, 56, 1)';
+                                if (item.company === '2U Inc.') return 'rgba(0, 176, 185, 1)';
+                                if (item.company === 'FirstBank') return 'rgba(192, 0, 0, 1)';
+                                if (item.company.includes('Boulder')) return 'rgba(207, 184, 124, 1)';
+                                return 'rgba(150, 150, 150, 1)';
+                            }, 
+                            borderWidth: 1, borderRadius: 4, borderSkipped: false }] },
+                    options: { indexAxis: 'y', maintainAspectRatio: false, responsive: true, 
+                        scales: { x: { type: 'linear', position: 'bottom', min: chartMinDate, ticks: { callback: function(value) { if (isNaN(value)) return ''; return new Date(value).getFullYear(); }, color: '#6b7280' }, grid: { color: '#e5e7eb' } }, y: { ticks: { autoSkip: false, font: { size: 11 }, color: '#4b5563' }, grid: { display: false } } }, 
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { /* ... duration calculation ... */ 
+                            if (!context.raw || !Array.isArray(context.raw) || context.raw.length < 2 || isNaN(context.raw[0]) || isNaN(context.raw[1])) return 'Invalid date range';
+                            const start = new Date(context.raw[0]); const end = new Date(context.raw[1]);
+                            if (isNaN(start.getTime()) || isNaN(end.getTime())) return 'Invalid date calculation';
+                            let years = end.getFullYear() - start.getFullYear(); let months = end.getMonth() - start.getMonth();
+                            if (months < 0) { years--; months += 12; }
+                            if ( start.getTime() !== end.getTime() || (years === 0 && months === 0) ) { months += 1; if (months === 12) { years += 1; months = 0; } } 
+                            if (years < 0) years = 0; if (months < 0) months = 0;
+                            let durationStr = '';
+                            if (years > 0) durationStr += `${years} year${years > 1 ? 's' : ''}`;
+                            if (months > 0) durationStr += ` ${months} month${months > 1 ? 's' : ''}`;
+                            if (durationStr.trim() === '' && end.getTime() > start.getTime()) return 'Duration: Less than a month';
+                            if (durationStr.trim() === '' && end.getTime() === start.getTime()) return 'Duration: Approx. 1 month'; 
+                            return `Duration: ${durationStr.trim() || 'Approx. 1 month'}`; 
+                        } } } } }
+                });
+            };
+
+            createChart(); // Create chart initially
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (event) => { 
+                    tabs.forEach(t => t.classList.remove('active'));
+                    event.currentTarget.classList.add('active'); 
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    const targetSelector = event.currentTarget.dataset.target;
+                    if (!targetSelector) { console.error("Button is missing data-target attribute:", event.currentTarget); return; }
+                    const target = document.querySelector(targetSelector);
+                     if (target) target.classList.remove('hidden'); 
+                     else console.error("Target tab content not found for selector:", targetSelector);
+                    if (targetSelector === '#experience-tab') { // Only resize/recreate if it's the experience tab
+                         setTimeout(() => { createChart(); }, 50); // Recreate chart on tab switch
+                    }
+                });
+            });
+
+            // Initialize active tab display and chart if needed
+            const initialActiveTab = document.querySelector('.tab-btn.active');
+             if (initialActiveTab && initialActiveTab.dataset.target) { 
+                 const initialTarget = document.querySelector(initialActiveTab.dataset.target);
+                 if (initialTarget) {
+                     initialTarget.classList.remove('hidden');
+                     if (initialActiveTab.dataset.target === '#experience-tab') { 
+                         setTimeout(createChart, 100); 
+                     }
+                 }
+             }
+
+            const currentDateEl = document.getElementById('currentDate');
+             if (currentDateEl) currentDateEl.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // --- Removed Gemini AI Chatbot Logic ---
+
+        });
+    </script>
+</body>
+</html>
+
