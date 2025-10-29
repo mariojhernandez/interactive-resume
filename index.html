@@ -9,23 +9,15 @@
     <!-- 
       This file uses the modern Tailwind/Chart.js layout 
       and is populated with Mario Hernandez's "SaaS Business Leader" professional data.
-      "Ask Gemini About Me" section removed.
+      Added headshot, changed font to Helvetica, added PDF embed tab.
+      Removed extraneous comments.
     -->
     <style>
-        @font-face {
-            font-family: 'Salesforce Sans';
-            src: url('https://unpkg.com/@salesforce-ux/design-system/assets/fonts/SalesforceSans-Regular.woff2') format('woff2');
-            font-weight: 400;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Salesforce Sans';
-            src: url('https://unpkg.com/@salesforce-ux/design-system/assets/fonts/SalesforceSans-Bold.woff2') format('woff2');
-            font-weight: 700;
-            font-style: normal;
-        }
+        /* Removed Salesforce Sans @font-face rules */
+        
         body {
-            font-family: 'Salesforce Sans', sans-serif;
+            /* Updated font-family */
+            font-family: Helvetica, Arial, sans-serif; 
             background-color: #fdfdfc;
             color: #333;
         }
@@ -138,21 +130,45 @@
         color: #4b5563;
         line-height: 1.6;
       }
+      /* PDF Embed Style */
+      .pdf-embed-container {
+        position: relative;
+        width: 100%;
+        height: 80vh; /* Adjust height as needed */
+        overflow: hidden;
+      }
+      .pdf-embed-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #e5e7eb; /* Add a light border */
+        border-radius: 8px;
+      }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Header with Mario's SaaS Leader Info -->
+    <!-- Header updated with Headshot -->
     <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-center items-center">
-            <div class="text-center">
+        <nav class="container mx-auto px-6 py-4 flex flex-col sm:flex-row justify-center items-center">
+             <!-- Headshot Image -->
+             <!-- IMPORTANT: Replace the src below with the actual URL of your hosted headshot image -->
+             <img 
+                src="https://placehold.co/128x128/E0E7FF/374151?text=MH" 
+                alt="Mario Hernandez Headshot" 
+                class="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover mb-4 sm:mb-0 sm:mr-8 border-4 border-white shadow-md"
+                onerror="this.src='https://placehold.co/128x128/E0E7FF/374151?text=Image+Error'; this.alt='Error loading headshot'" 
+             >
+            <div class="text-center sm:text-left"> 
                 <h1 class="text-3xl font-bold text-gray-800">Mario Hernandez</h1>
                 <p class="text-lg text-gray-600 mt-1">SaaS Business Operations & Customer Success Leader</p>
-                <div class="mt-2 text-sm text-gray-500 flex flex-wrap justify-center items-center gap-x-4">
+                <div class="mt-2 text-sm text-gray-500 flex flex-wrap justify-center sm:justify-start items-center gap-x-4">
                     <span>San Francisco, CA</span>
-                    <span class="text-gray-300">&bull;</span>
+                    <span class="text-gray-300 hidden sm:inline">&bull;</span> 
                     <a href="mailto:mario.j.hernandez@outlook.com" class="text-blue-700 hover:underline">mario.j.hernandez@outlook.com</a>
-                    <span class="text-gray-300">&bull;</span>
+                    <span class="text-gray-300 hidden sm:inline">&bull;</span>
                     <a href="https://www.linkedin.com/in/mariojhernandez" target="_blank" class="text-blue-700 hover:underline">linkedin.com/in/mariojhernandez</a>
                 </div>
             </div>
@@ -160,7 +176,6 @@
     </header>
 
     <main class="container mx-auto px-6 py-12">
-        <!-- Professional Summary for SaaS Leader -->
         <section id="summary" class="mb-12">
             <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-700/50 pb-2">Professional Summary</h2>
             <p class="text-lg text-gray-700 leading-relaxed">
@@ -178,13 +193,13 @@
                     <button class="tab-btn" data-target="#competencies-tab">Core Competencies</button>
                     <button class="tab-btn" data-target="#certs-tab">Certifications</button>
                     <button class="tab-btn" data-target="#education-tab">Education</button>
-                    <!-- Removed Ask Gemini Button -->
+                    <button class="tab-btn" data-target="#pdf-resume-tab">PDF Resume</button> 
                 </nav>
             </div>
 
             <div class="mt-8">
                 <div id="experience-tab" class="tab-content">
-                    <section id="timeline" class="mb-16">
+                     <section id="timeline" class="mb-16">
                         <h2 class="text-3xl font-bold text-gray-800 mb-2 border-b-2 border-blue-700/50 pb-2">Career Progression</h2>
                         <p class="text-lg text-gray-700 mb-6 leading-relaxed">This chart provides a visual overview of my career journey, highlighting the duration of each role. It demonstrates a consistent path of growth and increasing responsibility. Bars are color-coded by employer for clarity, and you can hover over any bar to see the specific role and its tenure.</p>
                         <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-4 text-sm text-gray-600">
@@ -211,7 +226,6 @@
 
                 <div id="projects-tab" class="tab-content hidden">
                     <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 space-y-8">
-                        
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">Gainsight Implementation & Adoption</h3>
                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -227,7 +241,6 @@
                             </div>
                         </div>
                         <hr class="border-gray-200">
-
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">Building Account Sheets for CSMs</h3>
                              <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -241,7 +254,6 @@
                              </div>
                         </div>
                         <hr class="border-gray-200">
-
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">Creating MBO Program for CSMs</h3>
                             <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -256,7 +268,6 @@
                              </div>
                         </div>
                         <hr class="border-gray-200">
-
                          <div>
                             <h3 class="text-xl font-bold text-gray-800">Managing User Subscription Model Transition</h3>
                              <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -269,7 +280,6 @@
                              </div>
                         </div>
                         <hr class="border-gray-200">
-                        
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">Leading Quarterly Reviews (QBRs)</h3>
                              <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -284,7 +294,6 @@
                              </div>
                         </div>
                         <hr class="border-gray-200">
-
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">Forecast Reporting & Automation</h3>
                              <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -298,7 +307,6 @@
                              </div>
                         </div>
                         <hr class="border-gray-200">
-                       
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">Documentation & Enablement</h3>
                              <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -313,7 +321,6 @@
                              </div>
                         </div>
                         <hr class="border-gray-200">
-
                         <div>
                             <h3 class="text-xl font-bold text-gray-800">New Program Launch (UNC Chapel Hill)</h3>
                              <ul class="mt-2 list-disc list-inside text-gray-600 space-y-1">
@@ -324,7 +331,6 @@
                                  <span class="project-tag tag-2u">2U</span>
                              </div>
                         </div>
-                        
                     </div>
                 </div>
 
@@ -413,10 +419,22 @@
                     </div>
                 </div>
 
-                <!-- Removed Ask Gemini Tab Content -->
-                <div id="ai-tab" class="tab-content hidden">
-                    <!-- Content Removed -->
-                </div>
+                 <div id="pdf-resume-tab" class="tab-content hidden">
+                     <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-2 border-blue-700/50 pb-2">PDF Resume</h2>
+                     <div class="pdf-embed-container bg-gray-100 rounded-lg">
+                         <iframe 
+                            src="Mario Hernandez Resume 2025.pdf" 
+                            title="Mario Hernandez Resume PDF"
+                         ></iframe>
+                     </div>
+                     <p class="mt-4 text-center text-gray-600">
+                         If the PDF does not display above, you can 
+                         <a href="Mario Hernandez Resume 2025.pdf" target="_blank" class="text-blue-700 hover:underline">view or download it here</a>.
+                     </p>
+                 </div>
+
+                 <div id="ai-tab" class="tab-content hidden">
+                     <!-- Content Removed -->                 </div>
 
             </div>
         </div>
